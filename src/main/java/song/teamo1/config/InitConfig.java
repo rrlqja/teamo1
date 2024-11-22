@@ -11,17 +11,16 @@ import song.teamo1.domain.user.service.UserService;
 @Component
 @RequiredArgsConstructor
 public class InitConfig {
-    private final InitData initData;
+    private final InitService initService;
 
     @PostConstruct
     public void setInit() {
-        initData.init();
+        initService.init();
     }
 
-    @Slf4j
     @Component
     @RequiredArgsConstructor
-    private static class InitData {
+    private static class InitService {
         private final UserService userService;
 
         public void init() {
