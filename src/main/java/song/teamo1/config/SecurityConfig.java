@@ -24,7 +24,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .anyRequest().permitAll())
                 .formLogin(login -> login
-                        .loginPage("/login")
+//                        .loginPage("/login")
                         .usernameParameter("username")
                         .passwordParameter("password"))
                 .logout(logout -> logout
