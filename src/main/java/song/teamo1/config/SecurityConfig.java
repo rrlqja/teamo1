@@ -22,6 +22,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.disable())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(request -> request
+                        .requestMatchers("/team/save").authenticated()
                         .anyRequest().permitAll())
                 .formLogin(login -> login
 //                        .loginPage("/login")
