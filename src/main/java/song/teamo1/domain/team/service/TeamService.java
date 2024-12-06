@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import song.teamo1.domain.team.dto.CreateTeamDto;
 import song.teamo1.domain.team.entity.Team;
 import song.teamo1.domain.team.exception.DuplicateTeamNameException;
+import song.teamo1.domain.team.exception.TeamNotFoundException;
 import song.teamo1.domain.team.repository.TeamJpaRepository;
 import song.teamo1.domain.user.entity.User;
 
@@ -35,5 +36,11 @@ public class TeamService {
                 .ifPresent(team -> {
                     throw new DuplicateTeamNameException("이미 존재하는 팀 이름 입니다.");
                 });
+    }
+
+    @Transactional
+    public Team findTeamById(Long teamId) {
+        return teamJpaRepository.findById(teamId)
+                .orElseThrow(TeamNotFoundException::new);
     }
 }

@@ -11,15 +11,15 @@ import song.teamo1.domain.user.entity.User;
 public class ProjectPost extends Post {
     @OneToOne
     @JoinColumn(name = "recruitment_id")
-    private RecruitmentPost recruitmentPost;
+    private Teaming teaming;
 
-    private ProjectPost(User user,  RecruitmentPost recruitmentPost, String title, String content) {
+    private ProjectPost(User user, Teaming teaming, String title, String content) {
         super(user, title, content);
-        this.recruitmentPost = recruitmentPost;
+        this.teaming = teaming;
     }
 
-    public static ProjectPost create(User user, RecruitmentPost recruitmentPost, String title, String content) {
-        return new ProjectPost(user, recruitmentPost, title, content);
+    public static ProjectPost create(User user, Teaming teaming, String title, String content) {
+        return new ProjectPost(user, teaming, title, content);
     }
 
     protected ProjectPost() {

@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import song.teamo1.domain.post.dto.SaveRecruitmentPostDto;
-import song.teamo1.domain.post.entity.RecruitmentPost;
+import song.teamo1.domain.post.dto.SaveTeamingDto;
+import song.teamo1.domain.post.entity.Teaming;
 import song.teamo1.domain.post.repository.PostJpaRepository;
 
 @Slf4j
@@ -32,10 +32,10 @@ class PostServiceTest {
 
     @Test
     void t1() {
-        SaveRecruitmentPostDto recruitmentPostDto = new SaveRecruitmentPostDto("test title", "test content");
+        SaveTeamingDto recruitmentPostDto = new SaveTeamingDto("test title", "test content");
         Long savePostId = postService.saveRecruitmentPost(recruitmentPostDto, null);
 
-        RecruitmentPost post = (RecruitmentPost) postJpaRepository.findById(savePostId).get();
+        Teaming post = (Teaming) postJpaRepository.findById(savePostId).get();
 
         Assertions.assertThat(post.getTitle())
                 .isEqualTo(recruitmentPostDto.getTitle());
