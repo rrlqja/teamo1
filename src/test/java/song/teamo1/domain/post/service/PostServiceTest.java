@@ -6,9 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import song.teamo1.domain.post.dto.SaveTeamingDto;
+import song.teamo1.domain.post.dto.ResCreateTeamingDto;
+import song.teamo1.domain.post.dto.ReqCreateTeamingDto;
 import song.teamo1.domain.post.entity.Teaming;
 import song.teamo1.domain.post.repository.PostJpaRepository;
+import song.teamo1.domain.user.entity.User;
+import song.teamo1.domain.user.repository.UserJpaRepository;
 
 @Slf4j
 @SpringBootTest
@@ -20,24 +23,24 @@ class PostServiceTest {
     PostService postService;
     @Autowired
     PostJpaRepository postJpaRepository;
-//    @Autowired
-//    RecruitmentPostJpaRepository recruitmentPostJpaRepository;
-
-//    @Test
-//    void successSaveRecruitment() {
-//        SavePostDto savePostDto = new SavePostDto("testTitle", "testContent");
-//
-//        assertDoesNotThrow(() -> postService.saveRecruitmentPost(savePostDto, null));
-//    }
+    @Autowired
+    UserJpaRepository userJpaRepository;
 
     @Test
-    void t1() {
-        SaveTeamingDto recruitmentPostDto = new SaveTeamingDto("test title", "test content");
-        Long savePostId = postService.saveRecruitmentPost(recruitmentPostDto, null);
+    void successCreateTeaming() {
+        //given
+        ReqCreateTeamingDto saveTeamingDto = new ReqCreateTeamingDto("test title", "test content", 1L);
 
-        Teaming post = (Teaming) postJpaRepository.findById(savePostId).get();
+        //when
+        ResCreateTeamingDto res = postService.createTeaming(getUser(), saveTeamingDto);
 
-        Assertions.assertThat(post.getTitle())
-                .isEqualTo(recruitmentPostDto.getTitle());
+        //then
+        Assertions.assertThat(postJpaRepository.findById(res.getId()))
+                .isNotEmpty()
+                .get().isInstanceOf(Teaming.class);
+    }
+
+    private User getUser() {
+        return userJpaRepository.findById(1L).get();
     }
 }

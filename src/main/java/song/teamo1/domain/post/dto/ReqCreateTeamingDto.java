@@ -11,12 +11,12 @@ import song.teamo1.domain.user.entity.User;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SaveTeamingDto {
+public class ReqCreateTeamingDto {
     private String title;
     private String content;
     private Long teamId;
 
-    public Teaming toTeaming(User user, Team team) {
+    public Teaming toEntity(User user, Team team) {
         return Teaming.create(user, title, content, team);
     }
 }

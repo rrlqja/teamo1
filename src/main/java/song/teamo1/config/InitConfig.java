@@ -3,9 +3,14 @@ package song.teamo1.config;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import song.teamo1.domain.user.dto.SaveUserDto;
-import song.teamo1.domain.user.service.UserService;
+import song.teamo1.domain.team.entity.Team;
+import song.teamo1.domain.team.entity.TeamMember;
+import song.teamo1.domain.team.repository.TeamJpaRepository;
+import song.teamo1.domain.team.repository.TeamMemberJpaRepository;
+import song.teamo1.domain.user.entity.User;
+import song.teamo1.domain.user.repository.UserJpaRepository;
 
 @Slf4j
 @Component
@@ -21,10 +26,27 @@ public class InitConfig {
     @Component
     @RequiredArgsConstructor
     private static class InitService {
-        private final UserService userService;
+        private final PasswordEncoder passwordEncoder;
+        private final UserJpaRepository userRepository;
+        private final TeamJpaRepository teamRepository;
+        private final TeamMemberJpaRepository teamMemberRepository;
 
         public void init() {
-            userService.saveUser(new SaveUserDto("1", "1", "n1"));
+            User user1 = userRepository.save(createUser("1", "1", "name1"));
+            Team team1 = teamRepository.save(createTeam("1", "1"));
+            TeamMember teamMember1 = teamMemberRepository.save(createTeamMember(team1, user1));
+        }
+
+        private User createUser(String username, String password, String name) {
+            return User.create(username, passwordEncoder.encode(password), name);
+        }
+
+        private Team createTeam(String name, String description) {
+            return Team.create(name, description);
+        }
+
+        private TeamMember createTeamMember(Team team, User user) {
+            return TeamMember.create(team, user);
         }
     }
 }
