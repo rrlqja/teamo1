@@ -22,12 +22,12 @@ public class Team {
     @CreatedDate
     private LocalDateTime createdDateTime;
 
+    public static Team create(String name, String info) {
+        return new Team(name, info);
+    }
+
     private Team(String name, String info) {
         this.name = name;
         this.info = info;
-    }
-
-    public static Team create(String name, String info) {
-        return new Team(name, info);
     }
 }

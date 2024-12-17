@@ -1,15 +1,23 @@
 package song.teamo1.domain.team.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import song.teamo1.domain.common.exception.team.exceptions.DuplicateTeamNameException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -22,16 +30,34 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class TeamControllerTest {
     @Autowired
     MockMvc mockMvc;
+    @Autowired
+    ObjectMapper objectMapper;
 
     @Test
     @WithUserDetails(value = "1")
-    void successSaveTeam() throws Exception{
-        mockMvc.perform(post("/team/save")
-                        .param("name", "test team name")
-                        .param("info", "test team info"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/team/{teamId}"));
+    @DisplayName("팀 생성 성공")
+    void successCreateTeam() throws Exception{
+        mockMvc.perform(
+                post("/team")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(Map.of("name", "test team name", "info", "test team info"))))
+                .andExpect(status().isOk());
+    }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"1"})
+    @WithUserDetails(value = "1")
+    @DisplayName("팀 생성 실패: 동일한 팀 이름 예외")
+    void failCreateTeam(String teamName) throws Exception {
+        mockMvc.perform(
+                post("/team")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(Map.of("name", teamName, "info", "test team info"))))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> {
+                    assertThat(result.getResolvedException())
+                            .isInstanceOf(DuplicateTeamNameException.class);
+                });
     }
 
 }

@@ -5,14 +5,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import song.teamo1.domain.common.dto.ExceptionDto;
-import song.teamo1.domain.team.exception.TeamMemberNotFoundException;
+import song.teamo1.domain.common.exception.TeamoException;
 
 @Slf4j
 @ControllerAdvice
 public class ExceptionController {
 
-    @ExceptionHandler(value = {TeamMemberNotFoundException.class})
-    public ResponseEntity<ExceptionDto> teamMemberNotFound(TeamMemberNotFoundException e) {
+    @ExceptionHandler(value = {TeamoException.class})
+    public ResponseEntity<ExceptionDto> teamMemberNotFound(TeamoException e) {
         return ResponseEntity.badRequest().body(new ExceptionDto(e.getMessage()));
     }
 }

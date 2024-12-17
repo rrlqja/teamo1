@@ -9,7 +9,7 @@ import song.teamo1.domain.post.dto.ReqCreateTeamingDto;
 import song.teamo1.domain.post.entity.Teaming;
 import song.teamo1.domain.post.repository.PostJpaRepository;
 import song.teamo1.domain.team.entity.TeamMember;
-import song.teamo1.domain.team.exception.TeamMemberNotFoundException;
+import song.teamo1.domain.common.exception.teammember.exceptions.TeamMemberNotFoundException;
 import song.teamo1.domain.team.repository.TeamMemberJpaRepository;
 import song.teamo1.domain.user.entity.User;
 

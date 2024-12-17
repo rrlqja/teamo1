@@ -9,7 +9,7 @@ import song.teamo1.domain.team.entity.Team;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateTeamDto {
+public class ReqCreateTeamDto {
     private String name;
     private String info;
 

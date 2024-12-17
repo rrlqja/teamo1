@@ -41,8 +41,8 @@ public class InitConfig {
             return User.create(username, passwordEncoder.encode(password), name);
         }
 
-        private Team createTeam(String name, String description) {
-            return Team.create(name, description);
+        private Team createTeam(String name, String info) {
+            return Team.create(name, info);
         }
 
         private TeamMember createTeamMember(Team team, User user) {

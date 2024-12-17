@@ -24,12 +24,12 @@ public class TeamMember {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    public static TeamMember create(Team team, User user) {
+        return new TeamMember(team, user);
+    }
+
     private TeamMember(Team team, User user) {
         this.team = team;
         this.user = user;
-    }
-
-    public static TeamMember create(Team team, User user) {
-        return new TeamMember(team, user);
     }
 }

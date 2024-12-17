@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import song.teamo1.domain.team.dto.CreateTeamDto;
+import song.teamo1.domain.team.dto.ReqCreateTeamDto;
 import song.teamo1.domain.team.entity.Team;
-import song.teamo1.domain.team.exception.DuplicateTeamNameException;
-import song.teamo1.domain.team.exception.TeamNotFoundException;
+import song.teamo1.domain.common.exception.team.exceptions.DuplicateTeamNameException;
+import song.teamo1.domain.common.exception.team.exceptions.TeamNotFoundException;
 import song.teamo1.domain.team.repository.TeamJpaRepository;
 import song.teamo1.domain.user.entity.User;
 
@@ -19,16 +19,16 @@ public class TeamService {
     private final TeamMemberService teamMemberService;
 
     @Transactional
-    public Long createTeam(User user, CreateTeamDto createTeamDto) {
-        validateTeamName(createTeamDto.getName());
+    public ResCreateTeamDto createTeam(User user, ReqCreateTeamDto reqCreateTeamDto) {
+        validateTeamName(reqCreateTeamDto.getName());
 
-        Team team = createTeamDto.toEntity();
+        Team team = reqCreateTeamDto.toEntity();
 
         Team saveTeam = teamJpaRepository.save(team);
 
         Long teamMemberId = teamMemberService.saveTeamMember(user, saveTeam);
 
-        return saveTeam.getId();
+        return new ResCreateTeamDto(saveTeam.getId());
     }
 
     private void validateTeamName(String name) {

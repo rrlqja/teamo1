@@ -25,7 +25,6 @@ public class PostController {
     @PostMapping("/teaming")
     public ResCreateTeamingDto createTeaming(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                              @RequestBody ReqCreateTeamingDto reqCreateTeamingDto) {
-
         ResCreateTeamingDto res = postService.createTeaming(userDetails.getUser(), reqCreateTeamingDto);
 
         return res;
