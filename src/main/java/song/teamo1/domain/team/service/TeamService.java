@@ -53,4 +53,8 @@ public class TeamService {
         return teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
     }
+
+    public void getTeam(User user, Long teamId) {
+
+    }
 }
