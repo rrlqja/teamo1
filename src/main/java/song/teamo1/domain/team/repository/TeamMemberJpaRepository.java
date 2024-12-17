@@ -9,6 +9,7 @@ import song.teamo1.domain.team.entity.Team;
 import song.teamo1.domain.team.entity.TeamMember;
 import song.teamo1.domain.user.entity.User;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -16,7 +17,7 @@ public interface TeamMemberJpaRepository extends JpaRepository<TeamMember, Long>
 //    @EntityGraph(attributePaths = {"team", "user"})
     @Query("select tm " +
             " from TeamMember tm " +
-            " join fetch tm.team and " +
+            " join fetch tm.team " +
 //            " join fetch tm.user " +
             "where tm.team.id = :teamId " +
             "  and tm.user.id = :userId")
@@ -29,5 +30,9 @@ public interface TeamMemberJpaRepository extends JpaRepository<TeamMember, Long>
             "  and tm.user = :user")
     Optional<TeamMember> findTeamMemberByTeamAndUser(@Param("team") Team team,
                                                      @Param("user") User user);
-
+    @Query("select tm " +
+            " from TeamMember tm " +
+            " join fetch tm.team " +
+            "where tm.user = :user ")
+    List<TeamMember> getTeamMembersByUser(@Param("user") User user);
 }

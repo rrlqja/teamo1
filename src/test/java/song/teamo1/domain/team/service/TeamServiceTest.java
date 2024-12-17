@@ -12,9 +12,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import song.teamo1.domain.common.exception.team.exceptions.DuplicateTeamNameException;
 import song.teamo1.domain.team.dto.ReqCreateTeamDto;
+import song.teamo1.domain.team.dto.ResTeamDto;
 import song.teamo1.domain.team.entity.Team;
 import song.teamo1.domain.team.repository.TeamJpaRepository;
 import song.teamo1.domain.team.repository.TeamMemberJpaRepository;
+import song.teamo1.domain.user.entity.User;
+import song.teamo1.domain.user.repository.UserJpaRepository;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -30,6 +35,8 @@ class TeamServiceTest {
     TeamJpaRepository teamRepository;
     @Autowired
     TeamMemberJpaRepository teamMemberRepository;
+    @Autowired
+    UserJpaRepository userRepository;
 
 //    @AfterEach
 //    void afterEach() {
@@ -57,6 +64,19 @@ class TeamServiceTest {
 
         assertThatThrownBy(() -> teamService.createTeam(null, reqCreateTeamDto))
                 .isInstanceOf(DuplicateTeamNameException.class);
+    }
+
+    @Test
+    @DisplayName("가입한 팀 조회 성공")
+    void successGetTeams() {
+        List<ResTeamDto> teams = teamService.getTeams(getUser());
+
+        Assertions.assertThat(teams.size())
+                .isEqualTo(1);
+    }
+
+    User getUser() {
+        return userRepository.findById(1L).get();
     }
 
 }

@@ -9,23 +9,30 @@ import song.teamo1.domain.team.entity.TeamMember;
 import song.teamo1.domain.team.repository.TeamMemberJpaRepository;
 import song.teamo1.domain.user.entity.User;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class TeamMemberService {
-    private final TeamMemberJpaRepository teamMemberJpaRepository;
+    private final TeamMemberJpaRepository teamMemberRepository;
 
     @Transactional
     public Long saveTeamMember(User user, Team team) {
-        Optional<TeamMember> teamMemberOptional = teamMemberJpaRepository.findTeamMemberByTeamAndUser(team, user);
+        Optional<TeamMember> teamMemberOptional = teamMemberRepository.findTeamMemberByTeamAndUser(team, user);
         if (teamMemberOptional.isPresent()) {
             return teamMemberOptional.get().getId();
         }
 
         TeamMember teamMember = TeamMember.create(team, user);
-        TeamMember saveTeamMember = teamMemberJpaRepository.save(teamMember);
+        TeamMember saveTeamMember = teamMemberRepository.save(teamMember);
         return saveTeamMember.getId();
+    }
+
+    public List<Team> getTeamMembers(User user) {
+        return teamMemberRepository.getTeamMembersByUser(user)
+                .stream().map(TeamMember::getTeam)
+                .toList();
     }
 }

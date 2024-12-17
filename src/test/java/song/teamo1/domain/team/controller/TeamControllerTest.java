@@ -35,6 +35,14 @@ class TeamControllerTest {
 
     @Test
     @WithUserDetails(value = "1")
+    @DisplayName("가입한 팀 조회 성공")
+    void successGetTeams() throws Exception {
+        mockMvc.perform(get("/team"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithUserDetails(value = "1")
     @DisplayName("팀 생성 성공")
     void successCreateTeam() throws Exception{
         mockMvc.perform(
