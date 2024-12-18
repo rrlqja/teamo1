@@ -5,11 +5,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
+import song.teamo1.domain.team.entity.Team;
 import song.teamo1.domain.team.entity.TeamMember;
+import song.teamo1.domain.team.repository.TeamJpaRepository;
 import song.teamo1.domain.team.repository.TeamMemberJpaRepository;
+import song.teamo1.domain.user.entity.User;
+import song.teamo1.domain.user.repository.UserJpaRepository;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
@@ -20,17 +23,31 @@ class TeamMemberServiceTest {
     @Autowired
     TeamMemberService teamMemberService;
     @Autowired
-    TeamMemberJpaRepository teamMemberJpaRepository;
+    TeamMemberJpaRepository teamMemberRepository;
+    @Autowired
+    UserJpaRepository userRepository;
+    @Autowired
+    TeamJpaRepository teamRepository;
 
     @Test
-    void successSaveTeamMemberByNull() {
-        Long teamMemberId = teamMemberService.saveTeamMember(null, null);
+    void successCreateTeamMemberLeader() {
+        Long teamMemberId = teamMemberService.createTeamMemberLeader(getUSer(), getTeam());
 
-        TeamMember teamMember = teamMemberJpaRepository.findById(teamMemberId)
+        TeamMember teamMember = teamMemberRepository.findById(teamMemberId)
                 .get();
 
-        assertThat(teamMember.getUser())
-                .isNull();
+        assertThat(teamMember.getTeamRole())
+                .isEqualTo(TeamMember.TEAM_ROLE.LEADER);
+        assertThat(teamMember.getUser().getId())
+                .isEqualTo(1L);
+    }
+
+    User getUSer() {
+        return userRepository.findById(1L).get();
+    }
+
+    Team getTeam() {
+        return teamRepository.findById(1L).get();
     }
 
 }

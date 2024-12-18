@@ -19,13 +19,13 @@ public class TeamMemberService {
     private final TeamMemberJpaRepository teamMemberRepository;
 
     @Transactional
-    public Long saveTeamMember(User user, Team team) {
+    public Long createTeamMemberLeader(User user, Team team) {
         Optional<TeamMember> teamMemberOptional = teamMemberRepository.findTeamMemberByTeamAndUser(team, user);
         if (teamMemberOptional.isPresent()) {
             return teamMemberOptional.get().getId();
         }
 
-        TeamMember teamMember = TeamMember.create(team, user);
+        TeamMember teamMember = TeamMember.create(team, user, TeamMember.TEAM_ROLE.LEADER);
         TeamMember saveTeamMember = teamMemberRepository.save(teamMember);
         return saveTeamMember.getId();
     }
@@ -34,5 +34,21 @@ public class TeamMemberService {
         return teamMemberRepository.getTeamMembersByUser(user)
                 .stream().map(TeamMember::getTeam)
                 .toList();
+    }
+
+    public boolean isMember(Team team, User user) {
+        Optional<TeamMember> optionalTeamMember = teamMemberRepository.findTeamMemberByTeamAndUser(team, user);
+
+        if (optionalTeamMember.isPresent()) {
+            optionalTeamMember.get()
+                    .isTeamLeader(user);
+            return true;
+        }
+
+        return false;
+    }
+
+    public List<TeamMember> getTeamMembersByTeamId(Team team) {
+        return teamMemberRepository.findTeamMemberByTeam(team);
     }
 }

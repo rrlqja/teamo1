@@ -35,4 +35,10 @@ public interface TeamMemberJpaRepository extends JpaRepository<TeamMember, Long>
             " join fetch tm.team " +
             "where tm.user = :user ")
     List<TeamMember> getTeamMembersByUser(@Param("user") User user);
+
+    @Query("select tm " +
+            " from TeamMember tm " +
+            " join fetch tm.user " +
+            "where tm.team = :team ")
+    List<TeamMember> findTeamMemberByTeam(@Param("team") Team team);
 }

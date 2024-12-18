@@ -34,7 +34,7 @@ public class InitConfig {
         public void init() {
             User user1 = userRepository.save(createUser("1", "1", "name1"));
             Team team1 = teamRepository.save(createTeam("1", "1"));
-            TeamMember teamMember1 = teamMemberRepository.save(createTeamMember(team1, user1));
+            TeamMember teamMember1 = teamMemberRepository.save(createTeamMember(team1, user1, TeamMember.TEAM_ROLE.LEADER));
         }
 
         private User createUser(String username, String password, String name) {
@@ -45,8 +45,8 @@ public class InitConfig {
             return Team.create(name, info);
         }
 
-        private TeamMember createTeamMember(Team team, User user) {
-            return TeamMember.create(team, user);
+        private TeamMember createTeamMember(Team team, User user, TeamMember.TEAM_ROLE teamRole) {
+            return TeamMember.create(team, user, teamRole);
         }
     }
 }

@@ -24,12 +24,37 @@ public class TeamMember {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    public static TeamMember create(Team team, User user) {
-        return new TeamMember(team, user);
+    @Enumerated(EnumType.STRING)
+    private TEAM_ROLE teamRole;
+
+    public static TeamMember create(Team team, User user, TEAM_ROLE teamRole) {
+        if (teamRole == null) {
+            return new TeamMember(team, user);
+        }
+        return new TeamMember(team, user, teamRole);
+    }
+
+    public Boolean isTeamLeader(User user) {
+        if (teamRole == TEAM_ROLE.LEADER || teamRole == TEAM_ROLE.SUB_LEADER) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public enum TEAM_ROLE {
+        MEMBER, LEADER, SUB_LEADER
     }
 
     private TeamMember(Team team, User user) {
         this.team = team;
         this.user = user;
+        this.teamRole = TEAM_ROLE.MEMBER;
+    }
+
+    private TeamMember(Team team, User user, TEAM_ROLE teamRole) {
+        this.team = team;
+        this.user = user;
+        this.teamRole = teamRole;
     }
 }

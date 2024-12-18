@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import song.teamo1.domain.common.exception.team.exceptions.DuplicateTeamNameException;
 import song.teamo1.domain.team.dto.ReqCreateTeamDto;
+import song.teamo1.domain.team.dto.ResGetTeamDto;
 import song.teamo1.domain.team.dto.ResTeamDto;
 import song.teamo1.domain.team.entity.Team;
 import song.teamo1.domain.team.repository.TeamJpaRepository;
@@ -73,6 +74,16 @@ class TeamServiceTest {
 
         Assertions.assertThat(teams.size())
                 .isEqualTo(1);
+    }
+
+    @Test
+    void successGetTeam() {
+        ResGetTeamDto team = teamService.getTeam(null, 1L);
+
+        log.info(team.toString());
+
+        assertThat(team.isAdmin())
+                .isTrue();
     }
 
     User getUser() {

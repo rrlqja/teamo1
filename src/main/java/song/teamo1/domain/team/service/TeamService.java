@@ -5,10 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import song.teamo1.domain.team.dto.ReqCreateTeamDto;
+import song.teamo1.domain.team.dto.ResGetTeamDto;
 import song.teamo1.domain.team.dto.ResTeamDto;
 import song.teamo1.domain.team.entity.Team;
 import song.teamo1.domain.common.exception.team.exceptions.DuplicateTeamNameException;
 import song.teamo1.domain.common.exception.team.exceptions.TeamNotFoundException;
+import song.teamo1.domain.team.entity.TeamMember;
 import song.teamo1.domain.team.repository.TeamJpaRepository;
 import song.teamo1.domain.user.entity.User;
 
@@ -36,7 +38,7 @@ public class TeamService {
 
         Team saveTeam = teamRepository.save(team);
 
-        Long teamMemberId = teamMemberService.saveTeamMember(user, saveTeam);
+        Long teamMemberId = teamMemberService.createTeamMemberLeader(user, saveTeam);
 
         return new ResCreateTeamDto(saveTeam.getId());
     }
@@ -48,13 +50,17 @@ public class TeamService {
                 });
     }
 
-    @Transactional
-    public Team findTeamById(Long teamId) {
-        return teamRepository.findById(teamId)
+    public ResGetTeamDto getTeam(User user, Long teamId) {
+        Team team = teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
-    }
 
-    public void getTeam(User user, Long teamId) {
+        List<TeamMember> teamMemberList = teamMemberService.getTeamMembersByTeamId(team);
 
+        return new ResGetTeamDto(team,
+                teamMemberList,
+                teamMemberList.stream().anyMatch(teamMember ->
+                        teamMember.getUser().getId().equals(user.getId()) &&
+                                teamMember.getTeamRole() == TeamMember.TEAM_ROLE.LEADER ||
+                                teamMember.getTeamRole() == TeamMember.TEAM_ROLE.SUB_LEADER));
     }
 }
