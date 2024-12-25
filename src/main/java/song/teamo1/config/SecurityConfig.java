@@ -17,7 +17,7 @@ import song.teamo1.security.filter.JwtFilter;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtFilter jwtFilter;
+//    private final JwtFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -35,8 +35,9 @@ public class SecurityConfig {
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
                         .permitAll())
-                .addFilterBefore()
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+//                .addFilterBefore()
+//                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                ;
 
         return http.build();
     }
