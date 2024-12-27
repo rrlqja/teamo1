@@ -1,5 +1,6 @@
 package song.teamo1.security.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,12 +17,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import song.teamo1.security.util.JwtUtil;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
+    private final ObjectMapper objectMapper;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -29,18 +31,38 @@ public class JwtFilter extends OncePerRequestFilter {
         if (authorization != null && authorization.startsWith("Bearer ")) {
 
             String token = authorization.substring(7);
-            if (JwtUtil.validateToken(token)) {
-                String username = JwtUtil.getUsername(token);
 
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            try {
+                if (JwtUtil.validateToken(token)) {
+                    String username = JwtUtil.getUsername(token);
 
-                UsernamePasswordAuthenticationToken authenticated =
-                        UsernamePasswordAuthenticationToken.authenticated(userDetails, null, userDetails.getAuthorities());
-                SecurityContext context = SecurityContextHolder.getContext();
-                context.setAuthentication(authenticated);
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+                    UsernamePasswordAuthenticationToken authenticated =
+                            UsernamePasswordAuthenticationToken.authenticated(userDetails, null, userDetails.getAuthorities());
+                    SecurityContext context = SecurityContextHolder.getContext();
+                    context.setAuthentication(authenticated);
+                }
+            } catch (Exception e) {
+                doResponse(response, "invalid jwt");
+                return;
             }
+
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private void doResponse(HttpServletResponse response, String message) {
+        SecurityContextHolder.clearContext();
+
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        response.setContentType("application/json");
+
+        try {
+            response.getWriter().write(objectMapper.writeValueAsString(Map.of("message", message)));
+        } catch (Exception e) {
+            log.error("error: {}", e.getMessage());
+        }
     }
 }

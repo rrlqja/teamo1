@@ -1,11 +1,11 @@
 package song.teamo1.security.util;
 
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
@@ -24,7 +24,7 @@ class JwtUtilTest {
     @Test
     void validateJwt() {
         String jwt = JwtUtil.generateToken("test1");
-        Assertions.assertThat(JwtUtil.validateToken(jwt))
+        assertThat(JwtUtil.validateToken(jwt))
                 .isTrue();
     }
 
