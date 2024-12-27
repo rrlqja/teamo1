@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import song.teamo1.security.authentication.userdetails.UserDetailsImpl;
 import song.teamo1.security.util.JwtUtil;
 
 import java.io.IOException;
@@ -36,6 +37,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 if (JwtUtil.validateToken(token)) {
                     String username = JwtUtil.getUsername(token);
 
+                    new UserDetailsImpl()
                     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
                     UsernamePasswordAuthenticationToken authenticated =
