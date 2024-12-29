@@ -9,6 +9,7 @@ import song.teamo1.domain.team.entity.Team;
 import song.teamo1.domain.team.entity.TeamMember;
 import song.teamo1.domain.team.repository.TeamJpaRepository;
 import song.teamo1.domain.team.repository.TeamMemberJpaRepository;
+import song.teamo1.domain.user.entity.Role;
 import song.teamo1.domain.user.entity.User;
 import song.teamo1.domain.user.repository.UserJpaRepository;
 
@@ -38,7 +39,7 @@ public class InitConfig {
         }
 
         private User createUser(String username, String password, String name) {
-            return User.create(username, passwordEncoder.encode(password), name);
+            return User.create(username, passwordEncoder.encode(password), name, Role.USER);
         }
 
         private Team createTeam(String name, String info) {

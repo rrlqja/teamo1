@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import song.teamo1.domain.user.dto.SaveUserDto;
+import song.teamo1.domain.user.entity.Role;
 import song.teamo1.domain.user.entity.User;
 import song.teamo1.domain.user.repository.UserJpaRepository;
 
@@ -20,9 +21,14 @@ public class UserService {
     public void saveUser(SaveUserDto saveUserDto) {
         findByUsername(saveUserDto.getUsername());
 
-        User newUser = User.create(saveUserDto.getUsername(), passwordEncoder.encode(saveUserDto.getPassword()), saveUserDto.getName());
+        User newUser = User.create(saveUserDto.getUsername(), passwordEncoder.encode(saveUserDto.getPassword()), saveUserDto.getName(), Role.USER);
 
         User saveUser = userRepository.save(newUser);
+    }
+
+    @Transactional
+    public void getUser(User user) {
+        userRepository.findById(user.getId());
     }
 
     private void findByUsername(String username) {

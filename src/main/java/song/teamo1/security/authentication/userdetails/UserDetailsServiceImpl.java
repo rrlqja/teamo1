@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import song.teamo1.domain.user.entity.User;
-import song.teamo1.domain.user.exception.UserNotFoundException;
 import song.teamo1.domain.user.repository.UserJpaRepository;
 
 @Slf4j
@@ -19,7 +18,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userJpaRepository.findByUsername(username)
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(() -> new UsernameNotFoundException("username not found exception"));
 
         return new UserDetailsImpl(user);
     }

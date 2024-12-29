@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,13 +19,13 @@ class JwtUtilTest {
 
     @Test
     void generateJwt() {
-        String test1 = JwtUtil.generateToken("test1");
+        String test1 = JwtUtil.generateToken(1L, "test1", List.of("user", "admin"));
         log.info("jwt = {}", test1);
     }
 
     @Test
     void validateJwt() {
-        String jwt = JwtUtil.generateToken("test1");
+        String jwt = JwtUtil.generateToken(1L, "test1", List.of("user", "admin"));
         assertThat(JwtUtil.validateToken(jwt))
                 .isTrue();
     }

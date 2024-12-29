@@ -1,6 +1,7 @@
 package song.teamo1.security.authentication.userdetails;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import song.teamo1.domain.user.entity.User;
 
@@ -15,7 +16,7 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public User getUser() {
-        return user;
+        return this.user;
     }
 
     @Override
@@ -40,16 +41,16 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new SimpleGrantedAuthority(user.getRole().name()));
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return this.user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return this.user.getUsername();
     }
 }

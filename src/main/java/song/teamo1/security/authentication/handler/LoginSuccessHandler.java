@@ -23,9 +23,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
-        String username = principal.getUsername();
 
-        String jwt = JwtUtil.generateToken(username);
+        String jwt = JwtUtil.generateToken(principal.getUser().getId(), principal.getUsername(), principal.getAuthorities().stream().map(Object::toString).toList());
         Map<String, String> tokens = new HashMap<>();
         tokens.put("accessToken", jwt);
 
