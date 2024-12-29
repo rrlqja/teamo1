@@ -78,7 +78,7 @@ class TeamServiceTest {
 
     @Test
     void successGetTeam() {
-        ResGetTeamDto team = teamService.getTeam(null, 1L);
+        ResGetTeamDto team = teamService.getTeam(getUser(), 1L);
 
         log.info(team.toString());
 

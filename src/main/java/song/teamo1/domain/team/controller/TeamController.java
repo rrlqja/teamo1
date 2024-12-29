@@ -46,6 +46,10 @@ public class TeamController {
     @GetMapping("/{teamId}")
     public void getTeam(@AuthenticationPrincipal UserDetailsImpl userDetails,
                         @PathVariable Long teamId) {
-        teamService.getTeam(userDetails.getUser(), teamId);
+        if (userDetails != null) {
+            teamService.getTeam(userDetails.getUser(), teamId);
+        } else {
+            teamService.getTeam(teamId);
+        }
     }
 }

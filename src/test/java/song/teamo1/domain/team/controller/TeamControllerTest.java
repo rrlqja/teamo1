@@ -48,7 +48,7 @@ class TeamControllerTest {
         mockMvc.perform(
                 post("/team")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(Map.of("name", "test team name", "info", "test team info"))))
+                        .content(objectMapper.writeValueAsString(Map.of("name", "test create team controller name", "info", "test team info"))))
                 .andExpect(status().isOk());
     }
 

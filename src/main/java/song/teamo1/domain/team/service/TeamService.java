@@ -63,4 +63,9 @@ public class TeamService {
                                 teamMember.getTeamRole() == TeamMember.TEAM_ROLE.LEADER ||
                                 teamMember.getTeamRole() == TeamMember.TEAM_ROLE.SUB_LEADER));
     }
+
+    public ResGetTeamDto getTeam(Long teamId) {
+
+        return null;
+    }
 }
