@@ -77,6 +77,7 @@ class TeamServiceTest {
     }
 
     @Test
+    @DisplayName("팀 상세 조회")
     void successGetTeam() {
         ResGetTeamDto team = teamService.getTeam(getUser(), 1L);
 

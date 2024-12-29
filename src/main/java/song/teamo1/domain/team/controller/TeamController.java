@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import song.teamo1.domain.team.dto.ReqCreateTeamDto;
+import song.teamo1.domain.team.dto.ResGetTeamDto;
 import song.teamo1.domain.team.dto.ResTeamDto;
 import song.teamo1.domain.team.service.ResCreateTeamDto;
 import song.teamo1.domain.team.service.TeamService;
@@ -43,13 +44,12 @@ public class TeamController {
         return res;
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{teamId}")
-    public void getTeam(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                        @PathVariable Long teamId) {
-        if (userDetails != null) {
-            teamService.getTeam(userDetails.getUser(), teamId);
-        } else {
-            teamService.getTeam(teamId);
-        }
+    public ResGetTeamDto getTeam(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                 @PathVariable("teamId") Long teamId) {
+        ResGetTeamDto res = teamService.getTeam(userDetails.getUser(), teamId);
+
+        return res;
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import song.teamo1.domain.common.exception.team.exceptions.DuplicateTeamNameException;
 
 import java.util.Map;
@@ -66,6 +67,20 @@ class TeamControllerTest {
                     assertThat(result.getResolvedException())
                             .isInstanceOf(DuplicateTeamNameException.class);
                 });
+    }
+
+    @Test
+    @WithUserDetails(value = "1")
+    @DisplayName("팀 상세 조회")
+    void successGetTeam() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(
+                        get("/team/{teamId}", 1L)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        log.info(response);
     }
 
 }

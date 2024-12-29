@@ -56,16 +56,16 @@ public class TeamService {
 
         List<TeamMember> teamMemberList = teamMemberService.getTeamMembersByTeamId(team);
 
+        boolean isAdmin = false;
+        if (user != null) {
+            isAdmin = teamMemberList.stream().anyMatch(teamMember ->
+                    teamMember.getUser().getId().equals(user.getId()) &&
+                    teamMember.getTeamRole() == TeamMember.TEAM_ROLE.LEADER ||
+                    teamMember.getTeamRole() == TeamMember.TEAM_ROLE.SUB_LEADER);
+        }
+
         return new ResGetTeamDto(team,
                 teamMemberList,
-                teamMemberList.stream().anyMatch(teamMember ->
-                        teamMember.getUser().getId().equals(user.getId()) &&
-                                teamMember.getTeamRole() == TeamMember.TEAM_ROLE.LEADER ||
-                                teamMember.getTeamRole() == TeamMember.TEAM_ROLE.SUB_LEADER));
-    }
-
-    public ResGetTeamDto getTeam(Long teamId) {
-
-        return null;
+                isAdmin);
     }
 }
