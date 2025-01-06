@@ -33,8 +33,10 @@ public class InitConfig {
         private final TeamMemberJpaRepository teamMemberRepository;
 
         public void init() {
-            User user1 = userRepository.save(createUser("1", "1", "name1"));
-            Team team1 = teamRepository.save(createTeam("1", "1"));
+            User user1 = userRepository.save(createUser("1", "1", "user1"));
+            User user2 = userRepository.save(createUser("2", "2", "user2"));
+            Team team1 = teamRepository.save(createTeam("team1", "team 1 info"));
+            Team team2 = teamRepository.save(createTeam("team2", "team 2 info"));
             TeamMember teamMember1 = teamMemberRepository.save(createTeamMember(team1, user1, TeamMember.TEAM_ROLE.LEADER));
         }
 
