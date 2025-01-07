@@ -1,7 +1,9 @@
 package song.teamo1.domain.team.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -54,7 +56,7 @@ class TeamControllerTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"1"})
+    @ValueSource(strings = {"team1"})
     @WithUserDetails(value = "1")
     @DisplayName("팀 생성 실패: 동일한 팀 이름 예외")
     void failCreateTeam(String teamName) throws Exception {
@@ -71,8 +73,8 @@ class TeamControllerTest {
 
     @Test
     @WithUserDetails(value = "1")
-    @DisplayName("팀 상세 조회")
-    void successGetTeam() throws Exception {
+    @DisplayName("팀 상세 조회(admin true)")
+    void successGetTeamWithAdminTrue() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
                         get("/team/{teamId}", 1L)
                                 .contentType(MediaType.APPLICATION_JSON))
@@ -80,7 +82,23 @@ class TeamControllerTest {
                 .andReturn();
 
         String response = mvcResult.getResponse().getContentAsString();
-        log.info(response);
+        boolean isAdmin = objectMapper.readTree(response).get("admin").asBoolean();
+        Assertions.assertThat(isAdmin).isTrue();
+    }
+
+    @Test
+    @WithUserDetails(value = "2")
+    @DisplayName("팀 상세 조회(admin false)")
+    void successGetTeamWithAdminFalse() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(
+                        get("/team/{teamId}", 1L)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+        boolean isAdmin = objectMapper.readTree(response).get("admin").asBoolean();
+        Assertions.assertThat(isAdmin).isFalse();
     }
 
 }
