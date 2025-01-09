@@ -39,15 +39,16 @@ public class SecurityConfig {
                 .formLogin(login -> login
                         .usernameParameter("username")
                         .passwordParameter("password")
-                        .successHandler(successHandler())
-                        .failureHandler(failureHandler()))
+//                        .successHandler(successHandler())
+//                        .failureHandler(failureHandler())
+                )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
                         .permitAll())
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(new JwtFilter(userDetailsService, objectMapper), UsernamePasswordAuthenticationFilter.class)
+//                .sessionManagement(session -> session
+//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                .addFilterBefore(new JwtFilter(userDetailsService, objectMapper), UsernamePasswordAuthenticationFilter.class)
         ;
 
         return http.build();
