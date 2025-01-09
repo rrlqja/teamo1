@@ -2,10 +2,14 @@ package song.teamo1.domain.team.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import song.teamo1.domain.team.dto.ReqCreateTeamDto;
 import song.teamo1.domain.team.dto.ResGetTeamDto;
+import song.teamo1.domain.team.dto.ResGetTeamListDto;
+import song.teamo1.domain.team.dto.ResGetTeamListTeamMemberDto;
 import song.teamo1.domain.team.dto.ResTeamDto;
 import song.teamo1.domain.team.entity.Team;
 import song.teamo1.domain.common.exception.team.exceptions.DuplicateTeamNameException;
@@ -25,12 +29,20 @@ public class TeamService {
     private final TeamJpaRepository teamRepository;
     private final TeamMemberService teamMemberService;
 
-    public List<ResTeamDto> getTeams(User user) {
-        List<Team> teamList = teamMemberService.getTeamMembers(user);
+    @Transactional
+    public List<ResGetTeamListDto> getTeamList(Pageable pageable) {
+        Page<Team> teamList = teamRepository.findAll(pageable);
 
-        return teamList.stream().map(ResTeamDto::new)
+        return teamList.map(team -> new ResGetTeamListDto(team, teamMemberService.getTeamLeader(team)))
                 .toList();
     }
+
+//    public List<ResTeamDto> getUserTeams(User user) {
+//        List<Team> teamList = teamMemberService.getTeamMembers(user);
+//
+//        return teamList.stream().map(ResTeamDto::new)
+//                .toList();
+//    }
 
     @Transactional
     public ResCreateTeamDto createTeam(User user, ReqCreateTeamDto reqCreateTeamDto) {
@@ -53,11 +65,24 @@ public class TeamService {
                 });
     }
 
+    @Transactional
+    public ResGetTeamDto getTeam(Long teamId) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(TeamNotFoundException::new);
+
+        List<TeamMember> teamMemberList = teamMemberService.getTeamMembersByTeam(team);
+
+        return new ResGetTeamDto(team,
+                teamMemberList,
+                false);
+    }
+
+    @Transactional
     public ResGetTeamDto getTeam(User user, Long teamId) {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
 
-        List<TeamMember> teamMemberList = teamMemberService.getTeamMembersByTeamId(team);
+        List<TeamMember> teamMemberList = teamMemberService.getTeamMembersByTeam(team);
 
         boolean isAdmin = false;
         if (user != null) {
@@ -70,5 +95,12 @@ public class TeamService {
         return new ResGetTeamDto(team,
                 teamMemberList,
                 isAdmin);
+    }
+
+    @Transactional
+    public List<ResGetTeamListTeamMemberDto> getTeamMembers(Long teamId) {
+        return teamMemberService.getTeamMembers(teamId)
+                .stream().map(ResGetTeamListTeamMemberDto::new)
+                .toList();
     }
 }

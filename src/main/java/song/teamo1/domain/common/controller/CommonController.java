@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/")
 public class CommonController {
 
-//    @GetMapping
-//    public String getIndex() {
-//        return "index";
-//    }
+    @GetMapping
+    public String getHome() {
+        return "home";
+    }
 }

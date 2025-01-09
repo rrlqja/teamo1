@@ -1,0 +1,19 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>Team</title>
+</head>
+<body>
+<div th:text="${team.teamName}"></div>
+<div th:text="${team.teamInfo}"></div>
+<div th:text="${team.admin}"></div>
+
+<div th:text="---------------------"></div>
+<div th:each="member : ${teamMemberList}">
+    <div th:text="${member.username}"></div>
+</div>
+
+</body>
+</html>

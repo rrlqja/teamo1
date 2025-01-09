@@ -72,7 +72,7 @@ public class ApplicationService {
     public List<ResApplicationListDto> getApplicationList(User user, Long teamId) {
         Team team = getTeam(teamId);
 
-        List<TeamMember> teamMemberList = teamMemberService.getTeamMembersByTeamId(team);
+        List<TeamMember> teamMemberList = teamMemberService.getTeamMembersByTeam(team);
         teamMemberList.stream()
                 .filter(tm -> tm.isTeamLeader(user))
                 .findAny()
@@ -120,7 +120,7 @@ public class ApplicationService {
     }
 
     private void validateTeamLeader(User user, Team team) {
-        Optional<TeamMember> optionalTeamMember = teamMemberService.getTeamMembersByTeamId(team).stream()
+        Optional<TeamMember> optionalTeamMember = teamMemberService.getTeamMembersByTeam(team).stream()
                 .filter(tm -> tm.isTeamLeader(user))
                 .findAny();
 

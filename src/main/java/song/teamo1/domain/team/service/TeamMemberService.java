@@ -14,11 +14,18 @@ import song.teamo1.domain.user.entity.User;
 import java.util.List;
 import java.util.Optional;
 
+import static song.teamo1.domain.team.entity.TeamMember.TeamRole.*;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class TeamMemberService {
     private final TeamMemberJpaRepository teamMemberRepository;
+
+    @Transactional
+    public TeamMember getTeamLeader(Team team) {
+        return teamMemberRepository.findTeamLeader(team, LEADER).orElseThrow(TeamMemberNotFoundException::new);
+    }
 
     @Transactional
     public Long createTeamMember(User user, Team team) {
@@ -40,10 +47,9 @@ public class TeamMemberService {
         teamMember.grantRole(teamRole);
     }
 
-    public List<Team> getTeamMembers(User user) {
-        return teamMemberRepository.getTeamMembersByUser(user)
-                .stream().map(TeamMember::getTeam)
-                .toList();
+    @Transactional
+    public List<TeamMember> getTeamMembers(Long teamId) {
+        return teamMemberRepository.getTeamMembersByTeam_Id(teamId);
     }
 
     public boolean isMember(Team team, User user) {
@@ -58,7 +64,7 @@ public class TeamMemberService {
         return false;
     }
 
-    public List<TeamMember> getTeamMembersByTeamId(Team team) {
+    public List<TeamMember> getTeamMembersByTeam(Team team) {
         return teamMemberRepository.findTeamMemberByTeam(team);
     }
 }

@@ -16,14 +16,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResGetTeamDto {
-    private String name;
-    private String info;
+    private Long teamId;
+    private String teamName;
+    private String teamInfo;
     private boolean isAdmin;
     private List<ResGetTeamMemberDto> teamMemberList = new ArrayList<>();
 
     public ResGetTeamDto(Team team, List<TeamMember> teamMemberList, boolean isAdmin) {
-        this.name = team.getName();
-        this.info = team.getInfo();
+        this.teamId = team.getId();
+        this.teamName = team.getName();
+        this.teamInfo = team.getInfo();
         this.isAdmin = isAdmin;
         this.teamMemberList = teamMemberList.stream()
                 .map(ResGetTeamMemberDto::new)
