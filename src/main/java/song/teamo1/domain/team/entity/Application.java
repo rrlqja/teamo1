@@ -1,6 +1,8 @@
 package song.teamo1.domain.team.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,6 +24,8 @@ public class Application extends CommonEntity {
 
     private String title;
     private String content;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,6 +34,22 @@ public class Application extends CommonEntity {
     @JoinColumn(name = "team_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Team team;
+
+    public boolean isWriter(User user) {
+        return this.user.getId().equals(user.getId());
+    }
+
+    public void accept() {
+        this.status = Status.APPROVED;
+    }
+
+    public void reject() {
+        this.status = Status.REJECTED;
+    }
+
+    public enum Status {
+        PENDING, APPROVED, REJECTED
+    }
 
     public static Application create(String title, String content, User user, Team team) {
         return new Application(title, content, user, team);
@@ -40,5 +60,6 @@ public class Application extends CommonEntity {
         this.content = content;
         this.user = user;
         this.team = team;
+        this.status = Status.PENDING;
     }
 }

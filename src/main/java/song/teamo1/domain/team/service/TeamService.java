@@ -16,6 +16,8 @@ import song.teamo1.domain.user.entity.User;
 
 import java.util.List;
 
+import static song.teamo1.domain.team.entity.TeamMember.TeamRole.*;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -38,7 +40,8 @@ public class TeamService {
 
         Team saveTeam = teamRepository.save(team);
 
-        Long teamMemberId = teamMemberService.createTeamMemberLeader(user, saveTeam);
+        Long teamMemberId = teamMemberService.createTeamMember(user, saveTeam);
+        teamMemberService.grantTeamRole(teamMemberId, LEADER);
 
         return new ResCreateTeamDto(saveTeam.getId());
     }
@@ -60,8 +63,8 @@ public class TeamService {
         if (user != null) {
             isAdmin = teamMemberList.stream().anyMatch(teamMember ->
                     teamMember.getUser().getId().equals(user.getId()) &&
-                    teamMember.getTeamRole() == TeamMember.TEAM_ROLE.LEADER ||
-                    teamMember.getTeamRole() == TeamMember.TEAM_ROLE.SUB_LEADER);
+                    teamMember.getTeamRole() == LEADER ||
+                    teamMember.getTeamRole() == SUB_LEADER);
         }
 
         return new ResGetTeamDto(team,

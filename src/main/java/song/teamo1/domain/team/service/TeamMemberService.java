@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import song.teamo1.domain.common.exception.teammember.exceptions.TeamMemberNotFoundException;
 import song.teamo1.domain.team.entity.Team;
 import song.teamo1.domain.team.entity.TeamMember;
+import song.teamo1.domain.team.entity.TeamMember.TeamRole;
 import song.teamo1.domain.team.repository.TeamMemberJpaRepository;
 import song.teamo1.domain.user.entity.User;
 
@@ -19,15 +21,23 @@ public class TeamMemberService {
     private final TeamMemberJpaRepository teamMemberRepository;
 
     @Transactional
-    public Long createTeamMemberLeader(User user, Team team) {
+    public Long createTeamMember(User user, Team team) {
         Optional<TeamMember> teamMemberOptional = teamMemberRepository.findTeamMemberByTeamAndUser(team, user);
         if (teamMemberOptional.isPresent()) {
             return teamMemberOptional.get().getId();
         }
 
-        TeamMember teamMember = TeamMember.create(team, user, TeamMember.TEAM_ROLE.LEADER);
+        TeamMember teamMember = TeamMember.create(team, user);
         TeamMember saveTeamMember = teamMemberRepository.save(teamMember);
         return saveTeamMember.getId();
+    }
+
+    @Transactional
+    public void grantTeamRole(Long teamMemberId, TeamRole teamRole) {
+        TeamMember teamMember =
+                teamMemberRepository.findById(teamMemberId).orElseThrow(TeamMemberNotFoundException::new);
+
+        teamMember.grantRole(teamRole);
     }
 
     public List<Team> getTeamMembers(User user) {

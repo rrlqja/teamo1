@@ -30,14 +30,14 @@ class TeamMemberServiceTest {
     TeamJpaRepository teamRepository;
 
     @Test
-    void successCreateTeamMemberLeader() {
-        Long teamMemberId = teamMemberService.createTeamMemberLeader(getUSer(), getTeam());
+    void successCreateTeamMember() {
+        Long teamMemberId = teamMemberService.createTeamMember(getUSer(), getTeam());
 
         TeamMember teamMember = teamMemberRepository.findById(teamMemberId)
                 .get();
 
         assertThat(teamMember.getTeamRole())
-                .isEqualTo(TeamMember.TEAM_ROLE.LEADER);
+                .isEqualTo(TeamMember.TeamRole.LEADER);
         assertThat(teamMember.getUser().getId())
                 .isEqualTo(1L);
     }
