@@ -1,0 +1,51 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>ApplicationForm</title>
+</head>
+<body>
+<form th:action th:method="post" th:object="${applicationForm}" id="applicationForm">
+    <fieldset style="border: 1px solid black">
+        <legend>Form</legend>
+        <div class="form-group ">
+            <input type="text" th:field="*{title}" placeholder="제목" />
+        </div>
+        <div class="form-group">
+            <input type="text" th:field="*{content}" />
+        </div>
+        <div class="form-group ">
+            <input type="button" value="신청" th:onclick="submitApplicationForm()"/>
+            <input type="button" value="취소" th:onclick="cancelApplicationForm()"/>
+        </div>
+    </fieldset>
+</form>
+
+<script>
+    function submitApplicationForm() {
+        const form = document.getElementById('applicationForm');
+        const formData = new FormData(form);
+
+        fetch('/team/saveApplication', {
+            method: 'POST',
+            body: formData
+        }).then((response) => {
+            if (response.ok) {
+                alert('신청이 완료되었습니다.');
+                window.opener.location.reload();
+                window.close();
+            } else {
+                alert('신청 중 문제가 발생하였습니다.');
+            }
+        });
+    }
+
+    function cancelApplicationForm() {
+        window.opener.location.reload();
+        window.close();
+    }
+</script>
+
+</body>
+</html>

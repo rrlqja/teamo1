@@ -42,6 +42,8 @@ public class InitConfig {
             Team team2 = teamRepository.save(createTeam("team2", "team 2 info"));
             TeamMember teamMember1 = teamMemberRepository.save(createTeamMember(team1, user1));
             TeamMember grantTeamMember1 = grantRole(teamMember1, LEADER);
+            TeamMember teamMember2 = teamMemberRepository.save(createTeamMember(team2, user2));
+            TeamMember grantTeamMember2 = grantRole(teamMember2, LEADER);
         }
 
         private User createUser(String username, String password, String name) {

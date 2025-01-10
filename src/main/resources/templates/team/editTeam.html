@@ -1,0 +1,16 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>EditTeam</title>
+</head>
+<body>
+<form th:action th:object="${team}" th:method="post">
+    <input type="hidden" th:field="*{teamId}" th:value="${team.teamId}"/>
+    <input type="text" th:field="*{teamName}" th:value="${teamName}"/>
+    <input type="text" th:field="*{teamInfo}" th:value="${team.teamInfo}"/>
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>

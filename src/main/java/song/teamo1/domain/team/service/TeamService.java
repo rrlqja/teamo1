@@ -6,7 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import song.teamo1.domain.common.exception.team.exceptions.EditNotAllowedException;
 import song.teamo1.domain.team.dto.ReqCreateTeamDto;
+import song.teamo1.domain.team.dto.ReqEditTeamDto;
 import song.teamo1.domain.team.dto.ResGetTeamDto;
 import song.teamo1.domain.team.dto.ResGetTeamListDto;
 import song.teamo1.domain.team.dto.ResGetTeamListTeamMemberDto;
@@ -102,5 +104,17 @@ public class TeamService {
         return teamMemberService.getTeamMembers(teamId)
                 .stream().map(ResGetTeamListTeamMemberDto::new)
                 .toList();
+    }
+
+    @Transactional
+    public Long editTeam(User user, Long teamId, ReqEditTeamDto reqEditTeamDto) {
+        Team team = teamRepository.findById(teamId).orElseThrow(TeamNotFoundException::new);
+
+        List<TeamMember> teamMembers = teamMemberService.getTeamMembers(team.getId());
+        teamMembers.stream().filter(tm -> tm.isTeamLeader(user))
+                .findAny().orElseThrow(EditNotAllowedException::new);
+
+        team.edit(reqEditTeamDto.getTeamName(), reqEditTeamDto.getTeamInfo());
+        return teamRepository.save(team).getId();
     }
 }

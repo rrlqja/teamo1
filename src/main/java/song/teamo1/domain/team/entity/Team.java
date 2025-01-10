@@ -22,6 +22,11 @@ public class Team {
     @CreatedDate
     private LocalDateTime createdDateTime;
 
+    public void edit(String teamName, String teamInfo) {
+        this.name = teamName;
+        this.info = teamInfo;
+    }
+
     public static Team create(String name, String info) {
         return new Team(name, info);
     }

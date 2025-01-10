@@ -7,8 +7,13 @@
 </head>
 <body>
 <div th:each="team : ${teamList}">
-    <div th:text="${team.teamName}" th:onclick="|location.href='@{/team/{teamId}(teamId=${team.teamId})}'|">
+    <div th:onclick="|location.href='@{/team/{teamId}(teamId=${team.teamId})}'|" style="cursor:pointer; border:1px solid black; width:200px; margin:10px; padding:10px;">
+        <div th:text="${team.teamName}"/>
+        <div th:text="${team.leaderName}"/>
     </div>
 </div>
+<duv>
+    <button th:onclick="|location.href='@{/team}'|">팀 생성</button>
+</duv>
 </body>
 </html>

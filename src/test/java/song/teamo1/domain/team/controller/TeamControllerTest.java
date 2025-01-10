@@ -39,7 +39,7 @@ class TeamControllerTest {
     @Test
     @WithUserDetails(value = "1")
     @DisplayName("가입한 팀 조회 성공")
-    void successGetTeams() throws Exception {
+    void successGetTeamList() throws Exception {
         mockMvc.perform(get("/team/user"))
                 .andExpect(status().isOk());
     }
@@ -47,7 +47,7 @@ class TeamControllerTest {
     @Test
     @WithUserDetails(value = "1")
     @DisplayName("팀 생성 성공")
-    void successCreateTeam() throws Exception{
+    void successGetCreateTeam() throws Exception{
         mockMvc.perform(
                 post("/team")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -59,7 +59,7 @@ class TeamControllerTest {
     @ValueSource(strings = {"team1"})
     @WithUserDetails(value = "1")
     @DisplayName("팀 생성 실패: 동일한 팀 이름 예외")
-    void failCreateTeam(String teamName) throws Exception {
+    void failGetCreateTeam(String teamName) throws Exception {
         mockMvc.perform(
                 post("/team")
                         .contentType(MediaType.APPLICATION_JSON)

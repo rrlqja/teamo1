@@ -14,6 +14,27 @@
 <div th:each="member : ${teamMemberList}">
     <div th:text="${member.username}"></div>
 </div>
+<div th:text="---------------------"></div>
+<div>
+    <button th:if="${team.admin}" th:onclick="|location.href='@{/team/{teamId}/edit(teamId=${team.teamId})}'|">
+        수정
+    </button>
+    <div sec:authorize="isAuthenticated()">
+        <button type="button" th:onclick="'openApplicationForm(' + ${team.teamId} + ')'">신청</button>
+    </div>
+</div>
+
+<script>
+    function openApplicationForm(teamId) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/application/applicationForm';
+        form.target = 'ApplicationForm';
+
+        const formOption = 'width=500, height=400, scrollbars=no, resizable=no;';
+        window.open('/team/' + teamId + '/applicationForm', 'ApplicationForm', formOption);
+    }
+</script>
 
 </body>
 </html>
