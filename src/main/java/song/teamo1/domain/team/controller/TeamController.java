@@ -2,6 +2,7 @@ package song.teamo1.domain.team.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,6 +21,7 @@ import song.teamo1.domain.team.dto.ReqEditTeamDto;
 import song.teamo1.domain.team.dto.ResGetTeamDto;
 import song.teamo1.domain.team.dto.ResGetTeamListDto;
 import song.teamo1.domain.team.dto.ResGetTeamListTeamMemberDto;
+import song.teamo1.domain.team.dto.UserTeamListDto;
 import song.teamo1.domain.team.service.ResCreateTeamDto;
 import song.teamo1.domain.team.service.TeamService;
 import song.teamo1.security.authentication.userdetails.UserDetailsImpl;
@@ -58,11 +60,16 @@ public class TeamController {
     }
 
     @GetMapping("/teamList")
-    public String getTeamList(@PageableDefault(page = 0, size = 10) Pageable pageable,
+    public String getTeamList(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                              @PageableDefault(page = 0, size = 10) Pageable pageable,
                               Model model) {
-        List<ResGetTeamListDto> teamList = teamService.getTeamList(pageable);
+        if (userDetails == null) {
+            throw new IllegalRequestException("잘못된 요청입니다.");
+        }
 
-        model.addAttribute("teamList", teamList);
+        Page<UserTeamListDto> userTeamList = teamService.getUserTeamList(userDetails.getUser(), pageable);
+
+        model.addAttribute("teamList", userTeamList);
 
         return "team/teamList";
     }

@@ -54,4 +54,7 @@ public interface TeamMemberJpaRepository extends JpaRepository<TeamMember, Long>
             "  and tm.teamRole = :teamRole")
     Optional<TeamMember> findTeamLeader(@Param("team") Team team,
                                         @Param("teamRole") TeamRole teamRole);
+
+    @Query("select tm from TeamMember tm where tm.user = :user")
+    List<TeamMember> findTeamMembersByUser(@Param("user") User user);
 }

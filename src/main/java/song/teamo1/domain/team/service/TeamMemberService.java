@@ -23,6 +23,11 @@ public class TeamMemberService {
     private final TeamMemberJpaRepository teamMemberRepository;
 
     @Transactional
+    public List<TeamMember> getTeamMembersByUser(User user) {
+        return teamMemberRepository.findTeamMembersByUser(user);
+    }
+
+    @Transactional
     public TeamMember getTeamLeader(Team team) {
         return teamMemberRepository.findTeamLeader(team, LEADER).orElseThrow(TeamMemberNotFoundException::new);
     }

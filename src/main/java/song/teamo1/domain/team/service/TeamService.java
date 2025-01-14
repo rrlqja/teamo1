@@ -13,6 +13,7 @@ import song.teamo1.domain.team.dto.ResGetTeamDto;
 import song.teamo1.domain.team.dto.ResGetTeamListDto;
 import song.teamo1.domain.team.dto.ResGetTeamListTeamMemberDto;
 import song.teamo1.domain.team.dto.ResTeamDto;
+import song.teamo1.domain.team.dto.UserTeamListDto;
 import song.teamo1.domain.team.entity.Team;
 import song.teamo1.domain.common.exception.team.exceptions.DuplicateTeamNameException;
 import song.teamo1.domain.common.exception.team.exceptions.TeamNotFoundException;
@@ -30,6 +31,15 @@ import static song.teamo1.domain.team.entity.TeamMember.TeamRole.*;
 public class TeamService {
     private final TeamJpaRepository teamRepository;
     private final TeamMemberService teamMemberService;
+
+    @Transactional
+    public Page<UserTeamListDto> getUserTeamList(User user, Pageable pageable) {
+        List<TeamMember> teamMemberList = teamMemberService.getTeamMembersByUser(user);
+
+        Page<Team> teamList = teamRepository.findTeamsByIdIn(teamMemberList.stream().map(tm -> tm.getTeam().getId()).toList(), pageable);
+
+        return teamList.map(UserTeamListDto::new);
+    }
 
     @Transactional
     public List<ResGetTeamListDto> getTeamList(Pageable pageable) {
