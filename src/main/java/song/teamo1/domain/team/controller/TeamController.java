@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,13 +14,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import song.teamo1.domain.common.exception.common.IllegalRequestException;
 import song.teamo1.domain.team.dto.ApplicationFormDto;
 import song.teamo1.domain.team.dto.ReqCreateTeamDto;
 import song.teamo1.domain.team.dto.ReqEditTeamDto;
 import song.teamo1.domain.team.dto.ResGetTeamDto;
-import song.teamo1.domain.team.dto.ResGetTeamListDto;
 import song.teamo1.domain.team.dto.ResGetTeamListTeamMemberDto;
 import song.teamo1.domain.team.dto.UserTeamListDto;
 import song.teamo1.domain.team.service.ResCreateTeamDto;
@@ -134,6 +135,7 @@ public class TeamController {
         return "team/applicationForm";
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PostMapping("/{teamId}/applicationForm")
     public void postTeamApplicationForm(@PathVariable("teamId") Long teamId,
                                         @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -142,6 +144,6 @@ public class TeamController {
 //            throw new IllegalRequestException("잘못된 요청입니다.");
 //        }
 
-
+        teamService.createApplication(userDetails.getUser(), teamId, applicationFormDto);
     }
 }

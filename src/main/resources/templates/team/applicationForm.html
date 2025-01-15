@@ -27,23 +27,29 @@
         const form = document.getElementById('applicationForm');
         const formData = new FormData(form);
 
-        fetch('/team/saveApplication', {
+        const actionUrl = form.getAttribute('action');
+
+        fetch(actionUrl, {
             method: 'POST',
             body: formData
         }).then((response) => {
             if (response.ok) {
                 alert('신청이 완료되었습니다.');
-                window.opener.location.reload();
                 window.close();
+                window.opener.location.reload();
             } else {
-                alert('신청 중 문제가 발생하였습니다.');
+                response.text().then((text) => {
+                    alert(text);
+                });
             }
+        }).catch(error => {
+            alert(error);
         });
     }
 
     function cancelApplicationForm() {
-        window.opener.location.reload();
         window.close();
+        window.opener.location.reload();
     }
 </script>
 

@@ -39,4 +39,11 @@ public interface ApplicationJpaRepository extends JpaRepository<Application, Lon
             "  and a.status = :status")
     Optional<Application> findByIdAndStatus(@Param("id") Long id,
                                             @Param("status") Status status);
+
+    @Query("select a " +
+            " from Application a " +
+            "where a.user = :user " +
+            "  and a.team = :team ")
+    Optional<Application> findApplicationByUserAndTeam(@Param("user") User user,
+                                                       @Param("team") Team team);
 }

@@ -6,7 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import song.teamo1.domain.common.exception.common.IllegalRequestException;
 import song.teamo1.domain.common.exception.team.exceptions.EditNotAllowedException;
+import song.teamo1.domain.team.dto.ApplicationFormDto;
 import song.teamo1.domain.team.dto.ReqCreateTeamDto;
 import song.teamo1.domain.team.dto.ReqEditTeamDto;
 import song.teamo1.domain.team.dto.ResGetTeamDto;
@@ -14,10 +16,12 @@ import song.teamo1.domain.team.dto.ResGetTeamListDto;
 import song.teamo1.domain.team.dto.ResGetTeamListTeamMemberDto;
 import song.teamo1.domain.team.dto.ResTeamDto;
 import song.teamo1.domain.team.dto.UserTeamListDto;
+import song.teamo1.domain.team.entity.Application;
 import song.teamo1.domain.team.entity.Team;
 import song.teamo1.domain.common.exception.team.exceptions.DuplicateTeamNameException;
 import song.teamo1.domain.common.exception.team.exceptions.TeamNotFoundException;
 import song.teamo1.domain.team.entity.TeamMember;
+import song.teamo1.domain.team.repository.ApplicationJpaRepository;
 import song.teamo1.domain.team.repository.TeamJpaRepository;
 import song.teamo1.domain.user.entity.User;
 
@@ -30,6 +34,7 @@ import static song.teamo1.domain.team.entity.TeamMember.TeamRole.*;
 @RequiredArgsConstructor
 public class TeamService {
     private final TeamJpaRepository teamRepository;
+    private final ApplicationJpaRepository applicationRepository;
     private final TeamMemberService teamMemberService;
 
     @Transactional
@@ -127,4 +132,27 @@ public class TeamService {
         team.edit(reqEditTeamDto.getTeamName(), reqEditTeamDto.getTeamInfo());
         return teamRepository.save(team).getId();
     }
+
+    @Transactional
+    public Long createApplication(User user, Long teamId, ApplicationFormDto applicationFormDto) {
+        Team team = teamRepository.findById(teamId).orElseThrow(TeamNotFoundException::new);
+
+        List<TeamMember> teamMemberList = teamMemberService.getTeamMembers(team.getId());
+        teamMemberList.stream()
+                .filter(tm->tm.getUser().getId().equals(user.getId()))
+                .findAny()
+                .ifPresent(teamMember -> {
+                    throw new IllegalRequestException("이미 가입한 팀 입니다.");
+                });
+
+        applicationRepository.findApplicationByUserAndTeam(user, team)
+                .ifPresent(a -> {
+                    throw new IllegalRequestException("이미 신청한 팀 입니다.");
+                });
+
+        Application application = Application.create(applicationFormDto.getTitle(), applicationFormDto.getContent(), user, team);
+
+        return applicationRepository.save(application).getId();
+    }
+
 }
