@@ -5,18 +5,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import song.teamo1.domain.post.entity.Teaming;
-import song.teamo1.domain.team.entity.Team;
-import song.teamo1.domain.user.entity.User;
 
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReqCreateTeamingDto {
-    private Long teamId;
+public class TeamingListDto {
+    private Long id;
     private String title;
-    private String content;
+    private String writer;
 
-    public Teaming toEntity(User user, Team team) {
-        return Teaming.create(user, title, content, team);
+    public TeamingListDto(Teaming teaming) {
+        this.id = teaming.getId();
+        this.title = teaming.getTitle();
+        this.writer = teaming.getWriter().getName();
     }
 }

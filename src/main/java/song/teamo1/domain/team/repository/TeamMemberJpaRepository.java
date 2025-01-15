@@ -18,7 +18,7 @@ public interface TeamMemberJpaRepository extends JpaRepository<TeamMember, Long>
     @Query("select tm " +
             " from TeamMember tm " +
             " join fetch tm.team " +
-//            " join fetch tm.user " +
+            " join fetch tm.user " +
             "where tm.team.id = :teamId " +
             "  and tm.user.id = :userId")
     Optional<TeamMember> findTeamMemberByTeamIdAndUserId(@Param("teamId") Long teamId,
@@ -28,7 +28,7 @@ public interface TeamMemberJpaRepository extends JpaRepository<TeamMember, Long>
             " from TeamMember tm " +
             "where tm.team = :team " +
             "  and tm.user = :user")
-    Optional<TeamMember> findTeamMemberByTeamAndUser(@Param("team") Team team,
+    Optional<TeamMember> findTeamMemberByTeamAndUser(@Param("teamId") Team team,
                                                      @Param("user") User user);
 //    @Query("select tm " +
 //            " from TeamMember tm " +

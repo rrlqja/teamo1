@@ -57,16 +57,11 @@ public class TeamMemberService {
         return teamMemberRepository.getTeamMembersByTeam_Id(teamId);
     }
 
-    public boolean isMember(Team team, User user) {
-        Optional<TeamMember> optionalTeamMember = teamMemberRepository.findTeamMemberByTeamAndUser(team, user);
+    public boolean isMember(Long teamId, Long userId) {
+        teamMemberRepository.findTeamMemberByTeamIdAndUserId(teamId, userId)
+                .orElseThrow(TeamMemberNotFoundException::new);
 
-        if (optionalTeamMember.isPresent()) {
-            optionalTeamMember.get()
-                    .isTeamLeader(user);
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     public List<TeamMember> getTeamMembersByTeam(Team team) {
